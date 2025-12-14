@@ -1,31 +1,100 @@
-# 🤖 Gemini RAG Agent with Memory
+🤖 Gemini RAG Agent with Memory
 
-An intelligent **Retrieval-Augmented Generation (RAG)** application powered by **Google Gemini**, capable of understanding and answering questions from your uploaded documents using **LangChain**, **ChromaDB**, and **HuggingFace embeddings**.
+AI-powered Retrieval-Augmented Generation (RAG) system built with Google Gemini, LangChain, and ChromaDB.
+This project lets users upload documents, build a knowledge base, and ask questions grounded in those documents — all through a clean Streamlit UI.
 
----
+🌟 Features
+✅ RAG Pipeline (Retrieval + Generation)
 
-## 🧩 Project Overview
+Extracts knowledge from uploaded documents
 
-**Goal:**  
-To create an AI agent that reads multiple documents, builds a searchable knowledge base, and answers user queries grounded in those documents.
+Uses semantic search over ChromaDB
 
-**Built With:**  
-- 🧠 Google Gemini API (2.5 Flash / Pro)
-- 🧬 LangChain Framework
-- 📚 Chroma Vector Database
-- 🗂️ HuggingFace Sentence Embeddings
-- 💾 Streamlit Frontend
+Generates accurate, grounded answers using Google Gemini
 
----
+✅ Document Uploading (Streamlit)
 
-## ⚙️ System Architecture
+Upload PDF, TXT, DOCX, MD files
 
-### **1️⃣ Document Upload**
-Users place their documents (PDFs, TXTs, etc.) into the `/data` folder.  
-Each file is read, split into chunks, and processed for embedding.
+Automatic ingestion + re-indexing
 
-### **2️⃣ Chunking & Embedding**
-Text is split into semantic chunks (e.g., 1000 characters) and embedded into numerical vectors using:
-```python
-from langchain.embeddings import HuggingFaceEmbeddings
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+Real-time update of vector database
+
+✅ Memory-Enabled Conversation
+
+Uses ConversationSummaryMemory to maintain context across chat sessions.
+
+✅ Google Gemini Integration
+
+Supports:
+
+models/gemini-2.5-flash
+
+models/gemini-2.5-pro
+
+✅ ChromaDB Vector Store
+
+Persistent storage
+
+Automatically rebuilt when new docs are uploaded
+
+✅ HuggingFace Sentence Embeddings
+
+Uses lightweight + high-performance encoder:
+
+all-MiniLM-L6-v2
+
+🏗️ System Architecture
+
+Here is a visual explanation of the full workflow:
+
+                 ┌──────────────────────────┐
+                 │      Streamlit UI        │
+                 │  - Chat Input            │
+                 │  - Document Upload       │
+                 └───────────┬──────────────┘
+                             │
+                Document Upload Event
+                             │
+                 ┌───────────▼──────────────┐
+                 │     Ingestion Pipeline    │
+                 │  - Load Documents         │
+                 │  - Split Text             │
+                 │  - Embeddings (HF)        │
+                 │  - Store in ChromaDB      │
+                 └───────────┬──────────────┘
+                             │
+               RAG Query (User Question)
+                             │
+                 ┌───────────▼──────────────┐
+                 │  Retriever (ChromaDB)     │
+                 │  Fetch Top-K Relevant     │
+                 │  Document Chunks          │
+                 └───────────┬──────────────┘
+                             │
+                 ┌───────────▼──────────────┐
+                 │ Google Gemini LLM         │
+                 │ - RAG Prompting           │
+                 │ - Conversation Memory     │
+                 └───────────┬──────────────┘
+                             │
+                 ┌───────────▼──────────────┐
+                 │      Final Response        │
+                 └───────────────────────────┘
+
+📁 Project Structure
+gemini_rag_agent/
+│
+├── app/
+│   ├── app.py                 # Streamlit frontend
+│   ├── utils.py               # Embeddings, Chroma DB helpers
+│   ├── rag_chain.py           # RAG chain builder
+│   ├── memory.py              # Conversation memory
+│   └── ingest.py              # Document ingestion pipeline
+│
+├── data/                      # User documents
+├── storage/chroma/            # Chroma vector DB (ignored in git)
+│
+├── .gitignore
+├── requirements.txt
+└── README.md
