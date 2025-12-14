@@ -1,3 +1,9 @@
+# --- Patch for modern SQLite (fixes ChromaDB sqlite3 version issue) ---
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# ---------------------------------------------------------------------
+
 import os
 from dotenv import load_dotenv
 from typing import List

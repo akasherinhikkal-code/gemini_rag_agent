@@ -3,8 +3,16 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# ===== Databases / Chroma =====
 *.db
 *.sqlite3
+storage/
+storage/chroma/
+
+# Sometimes chroma stores hidden files:
+*/chroma-collections.parquet
+*/chroma-embeddings.parquet
 
 # ===== Virtual Environment =====
 .venv/
@@ -20,9 +28,17 @@ env/
 
 # ===== Local / Streamlit =====
 .streamlit/
-storage/
 data/
 sample_data/
+uploads/
+tmp/
+
+# Cache
+**/.cache/
+**/.temp/
+
+# ===== Node / Web (if any future expansion) =====
+node_modules/
 
 # ===== System Files =====
 .DS_Store
@@ -31,4 +47,6 @@ Thumbs.db
 # ===== IDE / Editor =====
 .vscode/
 .idea/
+
+# Duplicate cleanup
 .venv/
