@@ -68,61 +68,68 @@ rag_chain.py → RAG chain builder
 memory.py → chat memory
 app.py → Streamlit UI
 
-🏗️ System Architecture
-          ┌────────────────────────────────┐
-          │          Streamlit UI          │
-          │  • Chat Box                    │
-          │  • Document Upload             │
-          └────────────────────────────────┘
-                          │
-                          ▼
-             ┌─────────────────────────┐
-             │    Ingestion Pipeline   │
-             │  • Load documents       │
-             │  • Split text           │
-             │  • Generate embeddings  │
-             │  • Store in ChromaDB    │
-             └─────────────────────────┘
-                          │
-                          ▼
-           ┌──────────────────────────────┐
-           │     Vector Retriever (K)     │
-           │  Fetch relevant document     │
-           │  chunks from ChromaDB        │
-           └──────────────────────────────┘
-                          │
-                          ▼
-          ┌────────────────────────────────┐
-          │        Gemini LLM (2.5)        │
-          │  • Combines retrieved chunks   │
-          │  • Produces grounded answers   │
-          │  • Maintains conversation mem  │
-          └────────────────────────────────┘
-                          │
-                          ▼
-                ┌───────────────────┐
-                │   Final Answer    │
-                │  + Source Citations│
-                └───────────────────┘
+## 🧩 System Architecture
 
-📂 Project Structure
+```text
+                 ┌──────────────────────────────┐
+                 │        Streamlit UI          │
+                 │  - Chat Box                  │
+                 │  - Document Upload           │
+                 └──────────────┬───────────────┘
+                                │
+                                ▼
+                 ┌──────────────────────────────┐
+                 │       Ingestion Pipeline     │
+                 │  • Load documents            │
+                 │  • Split text                │
+                 │  • Generate embeddings       │
+                 │  • Store in ChromaDB         │
+                 └──────────────┬───────────────┘
+                                │
+                                ▼
+                 ┌──────────────────────────────┐
+                 │     Vector Retriever (K)     │
+                 │ Fetch relevant document      │
+                 │ chunks from ChromaDB         │
+                 └──────────────┬───────────────┘
+                                │
+                                ▼
+                 ┌──────────────────────────────┐
+                 │      Gemini LLM (2.5)         │
+                 │ Combines retrieved chunks     │
+                 │ + conversation memory         │
+                 └──────────────┬───────────────┘
+                                │
+                                ▼
+                 ┌──────────────────────────────┐
+                 │       Final Answer            │
+                 │     + Source Citations        │
+                 └───────────────────────────────┘
+```
+
+---
+
+## 📁 Project Structure
+
+```text
 gemini_rag_agent/
 │
 ├── app/
-│   ├── app.py              # Streamlit frontend
-│   ├── utils.py            # Embeddings, ChromaDB utils
-│   ├── rag_chain.py        # RAG chain builder
-│   ├── memory.py           # Conversation memory
-│   ├── ingest.py           # Ingestion pipeline
+│   ├── app.py            # Streamlit UI (chat + upload)
+│   ├── utils.py          # Embeddings, ChromaDB helpers
+│   ├── rag_chain.py      # RAG chain builder
+│   ├── memory.py         # Conversation memory
+│   └── ingest.py         # Document ingestion pipeline
 │
-├── data/                   # Uploaded documents (ignored in Git)
+├── data/                 # Uploaded documents (ignored in Git)
 │
-├── storage/chroma/         # Vector DB (ignored in Git)
+├── storage/chroma/       # Chroma vector DB (ignored in Git)
 │
-├── .env.example            # Sample environment vars
-├── .gitignore              # Ignore sensitive files & local DB
-├── requirements.txt        # Dependencies
-├── README.md               # Project documentation
+├── .env.example          # API key template
+├── .gitignore            # Ignore sensitive files
+├── requirements.txt      # Python dependencies
+└── README.md             # Documentation
+```
 
 ⚙️ Setup Instructions
 1️⃣ Clone repository
