@@ -1,100 +1,204 @@
-🤖 Gemini RAG Agent with Memory
+🚀 Gemini RAG Agent with Memory
 
-AI-powered Retrieval-Augmented Generation (RAG) system built with Google Gemini, LangChain, and ChromaDB.
-This project lets users upload documents, build a knowledge base, and ask questions grounded in those documents — all through a clean Streamlit UI.
+A Production-Ready Retrieval-Augmented Generation (RAG) System using Google Gemini, LangChain, ChromaDB & Streamlit
 
-🌟 Features
-✅ RAG Pipeline (Retrieval + Generation)
+📌 Overview
 
-Extracts knowledge from uploaded documents
+This project implements a fully functional RAG pipeline using:
 
-Uses semantic search over ChromaDB
+Google Gemini (2.5 Flash / Pro)
 
-Generates accurate, grounded answers using Google Gemini
+LangChain for orchestration
 
-✅ Document Uploading (Streamlit)
+Sentence Transformers for text embeddings
 
-Upload PDF, TXT, DOCX, MD files
+ChromaDB as the vector store
 
-Automatic ingestion + re-indexing
+Streamlit for frontend UI
 
-Real-time update of vector database
+Conversation Memory for long chats
 
-✅ Memory-Enabled Conversation
+The agent can:
 
-Uses ConversationSummaryMemory to maintain context across chat sessions.
+✔️ Accept document uploads
+✔️ Index & embed documents automatically
+✔️ Retrieve relevant chunks
+✔️ Answer questions grounded in your documents
+✔️ Maintain conversation context
+✔️ Provide traceable sources
 
-✅ Google Gemini Integration
+Perfect for interviews, portfolios, real-world use, and learning RAG deeply.
 
-Supports:
+🧠 Key Features
+🔍 RAG (Retrieval-Augmented Generation)
 
-models/gemini-2.5-flash
+Your questions are answered using your documents—not just the model’s training.
 
-models/gemini-2.5-pro
+📁 Document Upload in UI
 
-✅ ChromaDB Vector Store
+Upload pdf, docx, txt, or md files directly in Streamlit.
 
-Persistent storage
+🧩 Automatic Ingestion Pipeline
 
-Automatically rebuilt when new docs are uploaded
+On upload, the system:
 
-✅ HuggingFace Sentence Embeddings
+Loads the document
 
-Uses lightweight + high-performance encoder:
+Splits text into chunks
 
-all-MiniLM-L6-v2
+Embeds using Sentence Transformers
+
+Stores vectors in ChromaDB
+
+💬 Conversation Memory
+
+The agent remembers previous messages using ConversationSummaryMemory.
+
+⚡ Works Offline After Indexing
+
+ChromaDB persists locally.
+
+🧱 Clean Modular Code (Best Practices)
+
+Separate modules:
+
+utils.py → embeddings + vector store
+ingest.py → ingestion pipeline
+rag_chain.py → RAG chain builder
+memory.py → chat memory
+app.py → Streamlit UI
 
 🏗️ System Architecture
+          ┌────────────────────────────────┐
+          │          Streamlit UI          │
+          │  • Chat Box                    │
+          │  • Document Upload             │
+          └────────────────────────────────┘
+                          │
+                          ▼
+             ┌─────────────────────────┐
+             │    Ingestion Pipeline   │
+             │  • Load documents       │
+             │  • Split text           │
+             │  • Generate embeddings  │
+             │  • Store in ChromaDB    │
+             └─────────────────────────┘
+                          │
+                          ▼
+           ┌──────────────────────────────┐
+           │     Vector Retriever (K)     │
+           │  Fetch relevant document     │
+           │  chunks from ChromaDB        │
+           └──────────────────────────────┘
+                          │
+                          ▼
+          ┌────────────────────────────────┐
+          │        Gemini LLM (2.5)        │
+          │  • Combines retrieved chunks   │
+          │  • Produces grounded answers   │
+          │  • Maintains conversation mem  │
+          └────────────────────────────────┘
+                          │
+                          ▼
+                ┌───────────────────┐
+                │   Final Answer    │
+                │  + Source Citations│
+                └───────────────────┘
 
-Here is a visual explanation of the full workflow:
-
-                 ┌──────────────────────────┐
-                 │      Streamlit UI        │
-                 │  - Chat Input            │
-                 │  - Document Upload       │
-                 └───────────┬──────────────┘
-                             │
-                Document Upload Event
-                             │
-                 ┌───────────▼──────────────┐
-                 │     Ingestion Pipeline    │
-                 │  - Load Documents         │
-                 │  - Split Text             │
-                 │  - Embeddings (HF)        │
-                 │  - Store in ChromaDB      │
-                 └───────────┬──────────────┘
-                             │
-               RAG Query (User Question)
-                             │
-                 ┌───────────▼──────────────┐
-                 │  Retriever (ChromaDB)     │
-                 │  Fetch Top-K Relevant     │
-                 │  Document Chunks          │
-                 └───────────┬──────────────┘
-                             │
-                 ┌───────────▼──────────────┐
-                 │ Google Gemini LLM         │
-                 │ - RAG Prompting           │
-                 │ - Conversation Memory     │
-                 └───────────┬──────────────┘
-                             │
-                 ┌───────────▼──────────────┐
-                 │      Final Response        │
-                 └───────────────────────────┘
-
-📁 Project Structure
+📂 Project Structure
 gemini_rag_agent/
 │
 ├── app/
-│   ├── app.py                 # Streamlit frontend
-│   ├── utils.py               # Embeddings, Chroma DB helpers
-│   ├── rag_chain.py           # RAG chain builder
-│   ├── memory.py              # Conversation memory
-│   └── ingest.py              # Document ingestion pipeline
+│   ├── app.py              # Streamlit frontend
+│   ├── utils.py            # Embeddings, ChromaDB utils
+│   ├── rag_chain.py        # RAG chain builder
+│   ├── memory.py           # Conversation memory
+│   ├── ingest.py           # Ingestion pipeline
 │
-├── data/                      # User documents
-├── storage/chroma/            # Chroma vector DB (ignored in git)
+├── data/                   # Uploaded documents (ignored in Git)
 │
-├── .gitignore
-├── requirements.txt
-└── README.md
+├── storage/chroma/         # Vector DB (ignored in Git)
+│
+├── .env.example            # Sample environment vars
+├── .gitignore              # Ignore sensitive files & local DB
+├── requirements.txt        # Dependencies
+├── README.md               # Project documentation
+
+⚙️ Setup Instructions
+1️⃣ Clone repository
+git clone https://github.com/akasherinhikkal-code/gemini_rag_agent.git
+cd gemini_rag_agent
+
+2️⃣ Create a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+3️⃣ Install dependencies
+pip install -r requirements.txt
+
+4️⃣ Configure API Key
+
+Create .env file:
+
+GOOGLE_API_KEY=YOUR_KEY_HERE
+
+
+Get your key from:
+https://aistudio.google.com/apikey
+
+5️⃣ Run document ingestion (optional)
+
+If you placed documents in /data manually:
+
+python app/ingest.py
+
+
+Otherwise, you can upload them directly from UI.
+
+6️⃣ Start the Streamlit app
+streamlit run app/app.py
+
+
+👉 Opens at:
+http://localhost:8501
+
+🧪 Sample Query Flow
+
+Upload a PDF → Ask:
+
+👉 "Summarize the document."
+👉 "What are the key sections?"
+👉 "Compare chapter 2 and chapter 5."
+
+The agent replies with document-grounded answers + sources.
+
+🎯 Use Cases
+
+✔️ Resume-based Q&A
+✔️ Company policy search
+✔️ Legal document summarization
+✔️ Technical manual Q&A
+✔️ Finance reports question answering
+✔️ Student study assistant
+✔️ Private knowledge-base chatbot
+
+🛡️ Security
+
+.env, /data, /storage are all ignored in GitHub
+
+No personal keys or info will be committed
+
+ChromaDB persists locally only
+
+🛠️ Future Improvements
+
+📌 Add session-based private indices
+📌 Support for images + OCR ingestion
+📌 Cloud vector database (Pinecone / Weaviate)
+📌 Prompt caching
+📌 Multi-document analytics
+
+🤝 Contributing
+
+Pull requests are welcome!
+If you want new features, feel free to open an issue.
